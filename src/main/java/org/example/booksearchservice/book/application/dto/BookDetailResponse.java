@@ -14,7 +14,7 @@ public record BookDetailResponse(
         @JsonFormat(pattern = "yyyy-MM-dd")
         LocalDate published
 ) {
-    public static BookDetailResponse from(Book book) {
+    public static BookDetailResponse of(Book book) {
         return new BookDetailResponse(
                 book.getIsbn(),
                 book.getBasicInfo().getTitle(),

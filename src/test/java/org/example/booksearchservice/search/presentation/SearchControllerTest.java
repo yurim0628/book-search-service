@@ -1,4 +1,4 @@
-package org.example.booksearchservice.book.presentation;
+package org.example.booksearchservice.search.presentation;
 
 import org.example.booksearchservice.book.infrastructure.persistence.BookEntity;
 import org.example.booksearchservice.book.infrastructure.persistence.BookJpaRepository;
@@ -19,7 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @AutoConfigureMockMvc
-class BookControllerTest {
+public class SearchControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -37,16 +37,32 @@ class BookControllerTest {
     }
 
     @Test
-    @DisplayName("[SUCCESS] 도서 상세 조회 시, 200 OK 및 조회 결과를 반환한다")
-    void getBookDetail_success() throws Exception {
-        mockMvc.perform(get("/api/books/" + savedBookEntity.getId())
-                        .accept(MediaType.APPLICATION_JSON))
+    @DisplayName("[SUCCESS] 키워드로 책을 검색하면, 200 OK 및 검색 결과를 반환한다")
+    void searchBooks_success() throws Exception {
+        // given
+        String keyword = savedBookEntity.getTitle();
+
+        // when & then
+        mockMvc.perform(get("/api/search/books")
+                        .param("keyword", keyword)
+                        .param("page", "0")
+                        .param("size", "10")
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.isbn").value("978-3-16-148410-0"))
-                .andExpect(jsonPath("$.title").value("Effective Java"))
-                .andExpect(jsonPath("$.subtitle").value("Programming Language Guide"))
-                .andExpect(jsonPath("$.author").value("Joshua Bloch"))
-                .andExpect(jsonPath("$.publisher").value("Addison-Wesley"))
-                .andExpect(jsonPath("$.published").value("2018-01-11"));
+                .andExpect(jsonPath("$.searchQuery").value(keyword))
+                .andExpect(jsonPath("$.pageInfo.totalElements").value(1))
+                .andExpect(jsonPath("$.books[0].isbn").value(savedBookEntity.getIsbn()))
+                .andExpect(jsonPath("$.searchMetaData.strategy").value("NONE"))
+                .andExpect(jsonPath("$.searchMetaData.executionTime").isNumber());
+    }
+
+    @Test
+    @DisplayName("[FAILURE] 키워드가 누락된 경우, 400 Bad Request를 반환한다")
+    void searchBooks_keywordMissing_badRequest() throws Exception {
+        // when & then
+        mockMvc.perform(get("/api/search/books")
+                        .param("page", "0")
+                        .param("size", "10"))
+                .andExpect(status().isBadRequest());
     }
 }
