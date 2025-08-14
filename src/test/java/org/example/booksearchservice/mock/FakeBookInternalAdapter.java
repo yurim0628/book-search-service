@@ -27,6 +27,18 @@ public class FakeBookInternalAdapter implements BookInternalPort {
         return BookPageResponse.of(bookPage);
     }
 
+    @Override
+    public BookPageResponse findBooksByKeywordExcluding(String firstKeyword, String secondKeyword, Pageable pageable) {
+        List<Book> allBooks = createBooks(5);
+        List<Book> filteredBooks = allBooks.stream()
+                .filter(book -> containsKeyword(book, firstKeyword))
+                .filter(book -> !containsKeyword(book, secondKeyword))
+                .toList();
+
+        Page<Book> bookPage = new PageImpl<>(filteredBooks, pageable, filteredBooks.size());
+        return BookPageResponse.of(bookPage);
+    }
+
     private List<Book> filterBooksByKeywords(List<String> keywords) {
         List<Book> allBooks = createBooks(5);
         return allBooks.stream()
