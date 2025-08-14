@@ -24,4 +24,14 @@ public interface BookJpaRepository extends JpaRepository<BookEntity, Long> {
                OR LOWER(b.subtitle) LIKE LOWER(CONCAT('%', :secondKeyword, '%')))
             """)
     Page<BookEntity> findByAnyKeywords(String firstKeyword, String secondKeyword, Pageable pageable);
+
+    @Query("""
+            SELECT b
+            FROM BookEntity b
+            WHERE (LOWER(b.title) LIKE LOWER(CONCAT('%', :firstKeyword, '%'))
+                OR LOWER(b.subtitle) LIKE LOWER(CONCAT('%', :firstKeyword, '%')))
+              AND (LOWER(b.title) NOT LIKE LOWER(CONCAT('%', :secondKeyword, '%'))
+                AND LOWER(b.subtitle) NOT LIKE LOWER(CONCAT('%', :secondKeyword, '%')))
+            """)
+    Page<BookEntity> findByKeywordExcluding(String firstKeyword, String secondKeyword, Pageable pageable);
 }
