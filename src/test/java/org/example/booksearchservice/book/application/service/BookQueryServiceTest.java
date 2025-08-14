@@ -3,6 +3,7 @@ package org.example.booksearchservice.book.application.service;
 import org.example.booksearchservice.book.application.dto.BookDetailResponse;
 import org.example.booksearchservice.book.application.dto.BookPageResponse;
 import org.example.booksearchservice.book.application.usecase.LoadBookDetailUseCase;
+import org.example.booksearchservice.book.application.usecase.LoadBooksByAnyKeywordUseCase;
 import org.example.booksearchservice.book.application.usecase.LoadBooksByKeywordUseCase;
 import org.example.booksearchservice.book.domain.Book;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,13 +25,15 @@ class BookQueryServiceTest {
 
     private LoadBookDetailUseCase loadBookUseCase;
     private LoadBooksByKeywordUseCase loadBooksByKeywordUseCase;
+    private LoadBooksByAnyKeywordUseCase loadBooksByAnyKeywordUseCase;
     private BookQueryService bookQueryService;
 
     @BeforeEach
     void setUp() {
         loadBookUseCase = mock(LoadBookDetailUseCase.class);
         loadBooksByKeywordUseCase = mock(LoadBooksByKeywordUseCase.class);
-        bookQueryService = new BookQueryService(loadBookUseCase, loadBooksByKeywordUseCase);
+        loadBooksByAnyKeywordUseCase = mock(LoadBooksByAnyKeywordUseCase.class);
+        bookQueryService = new BookQueryService(loadBookUseCase, loadBooksByKeywordUseCase, loadBooksByAnyKeywordUseCase);
     }
 
     @Test
@@ -63,6 +66,26 @@ class BookQueryServiceTest {
 
         // when
         BookPageResponse response = bookQueryService.findBooksByKeyword(keyword, pageable);
+
+        // then
+        assertThat(response.books().getFirst().isbn()).isEqualTo(books.getFirst().getIsbn());
+    }
+
+    @Test
+    @DisplayName("[SUCCESS] 두 개의 키워드와 페이징 정보로 책 목록을 조회하면 페이지 응답을 반환한다")
+    void findBooksByAnyKeyword_givenTwoKeywordsAndPageable_returnsBookPageResponse() {
+        // given
+        String firstKeyword = "java";
+        String secondKeyword = "spring";
+        Pageable pageable = PageRequest.of(0, 10);
+
+        List<Book> books = List.of(createBook());
+        Page<Book> bookPage = new PageImpl<>(books, pageable, books.size());
+
+        when(loadBooksByAnyKeywordUseCase.execute(firstKeyword, secondKeyword, pageable)).thenReturn(bookPage);
+
+        // when
+        BookPageResponse response = bookQueryService.findBooksByAnyKeyword(firstKeyword, secondKeyword, pageable);
 
         // then
         assertThat(response.books().getFirst().isbn()).isEqualTo(books.getFirst().getIsbn());
