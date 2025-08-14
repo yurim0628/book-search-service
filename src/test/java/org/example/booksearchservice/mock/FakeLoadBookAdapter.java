@@ -34,6 +34,7 @@ public class FakeLoadBookAdapter implements LoadBookPort {
                         .publishedDate(LocalDate.of(2018, 1, 11))
                         .build())
                 .build());
+
         store.put(2L, Book.builder()
                 .isbn("978-0-13-468609-7")
                 .basicInfo(BasicInfo.builder()
@@ -56,18 +57,50 @@ public class FakeLoadBookAdapter implements LoadBookPort {
     @Override
     public Page<Book> loadByKeyword(String keyword, Pageable pageable) {
         List<Book> filteredBooks = store.values().stream()
-                .filter(book -> book.getBasicInfo()
-                        .getTitle()
-                        .toLowerCase()
-                        .contains(keyword.toLowerCase()))
+                .filter(book -> containsIgnoreCase(book.getBasicInfo().getTitle(), keyword))
                 .toList();
 
-        int pageOffset = toIntExact(pageable.getOffset());
-        int pageLimit = min((pageOffset + pageable.getPageSize()), filteredBooks.size());
-        List<Book> pagedBooks = (pageOffset <= pageLimit)
-                ? filteredBooks.subList(pageOffset, pageLimit)
-                : List.of();
+        return paginate(filteredBooks, pageable);
+    }
 
-        return new PageImpl<>(pagedBooks, pageable, filteredBooks.size());
+    @Override
+    public Page<Book> loadByAnyKeywords(String firstKeyword, String secondKeyword, Pageable pageable) {
+        List<Book> filteredBooks = store.values().stream()
+                .filter(book -> {
+                    return containsIgnoreCase(book.getBasicInfo().getTitle(), firstKeyword) ||
+                            containsIgnoreCase(book.getBasicInfo().getSubtitle(), firstKeyword) ||
+                            containsIgnoreCase(book.getBasicInfo().getTitle(), secondKeyword) ||
+                            containsIgnoreCase(book.getBasicInfo().getSubtitle(), secondKeyword);
+                })
+                .toList();
+
+        return paginate(filteredBooks, pageable);
+    }
+
+    @Override
+    public Page<Book> loadByKeywordExcluding(String firstKeyword, String secondKeyword, Pageable pageable) {
+        List<Book> filteredBooks = store.values().stream()
+                .filter(book -> {
+                    boolean containsFirst = containsIgnoreCase(book.getBasicInfo().getTitle(), firstKeyword) ||
+                            containsIgnoreCase(book.getBasicInfo().getSubtitle(), firstKeyword);
+                    boolean containsSecond = containsIgnoreCase(book.getBasicInfo().getTitle(), secondKeyword) ||
+                            containsIgnoreCase(book.getBasicInfo().getSubtitle(), secondKeyword);
+                    return containsFirst && !containsSecond;
+                })
+                .toList();
+
+        return paginate(filteredBooks, pageable);
+    }
+
+    private Page<Book> paginate(List<Book> books, Pageable pageable) {
+        int pageOffset = toIntExact(pageable.getOffset());
+        int pageLimit = min(pageOffset + pageable.getPageSize(), books.size());
+        List<Book> pagedBooks = (pageOffset <= pageLimit) ? books.subList(pageOffset, pageLimit) : List.of();
+        return new PageImpl<>(pagedBooks, pageable, books.size());
+    }
+
+    private boolean containsIgnoreCase(String source, String target) {
+        if (source == null || target == null) return false;
+        return source.toLowerCase().contains(target.toLowerCase());
     }
 }

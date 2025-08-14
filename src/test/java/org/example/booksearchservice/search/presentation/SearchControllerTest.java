@@ -43,7 +43,7 @@ public class SearchControllerTest {
         String keyword = savedBookEntity.getTitle();
 
         // when & then
-        mockMvc.perform(get("/api/search/books")
+        mockMvc.perform(get("/api/search/books/simple")
                         .param("keyword", keyword)
                         .param("page", "0")
                         .param("size", "10")
@@ -60,9 +60,39 @@ public class SearchControllerTest {
     @DisplayName("[FAILURE] 키워드가 누락된 경우, 400 Bad Request를 반환한다")
     void searchBooks_keywordMissing_badRequest() throws Exception {
         // when & then
-        mockMvc.perform(get("/api/search/books")
+        mockMvc.perform(get("/api/search/books/simple")
                         .param("page", "0")
                         .param("size", "10"))
                 .andExpect(status().isBadRequest());
     }
+
+    @Test
+    @DisplayName("[SUCCESS] 복합 쿼리로 책을 검색하면, 200 OK 및 검색 결과를 반환한다")
+    void searchBooksByComplexQuery_success() throws Exception {
+        // given
+        String firstKeyword = savedBookEntity.getTitle().split(" ")[0];
+        String secondKeyword = savedBookEntity.getTitle().split(" ")[1];
+
+        // when & then
+        mockMvc.perform(get("/api/search/books/complex")
+                        .param("query", firstKeyword + "|" + secondKeyword)
+                        .param("page", "0")
+                        .param("size", "10")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.pageInfo.totalElements").value(1))
+                .andExpect(jsonPath("$.books[0].isbn").value(savedBookEntity.getIsbn()))
+                .andExpect(jsonPath("$.searchMetaData.strategy").value("OR"))
+                .andExpect(jsonPath("$.searchMetaData.executionTime").isNumber());
+    }
+
+    @Test
+    @DisplayName("[FAILURE] 복합 쿼리 파라미터 누락 시 400 Bad Request를 반환한다")
+    void searchBooksByComplexQuery_queryMissing_badRequest() throws Exception {
+        mockMvc.perform(get("/api/search/books/complex")
+                        .param("page", "0")
+                        .param("size", "10"))
+                .andExpect(status().isBadRequest());
+    }
+
 }

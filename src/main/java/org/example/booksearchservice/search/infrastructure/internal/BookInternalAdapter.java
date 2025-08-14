@@ -17,4 +17,14 @@ public class BookInternalAdapter implements BookInternalPort {
     public BookPageResponse findBooksByKeyword(String keyword, Pageable pageable) {
         return bookQueryService.findBooksByKeyword(keyword, pageable);
     }
+
+    @Override
+    public BookPageResponse findBooksByAnyKeyword(String firstKeyword, String secondKeyword, Pageable pageable) {
+        return bookQueryService.findBooksByAnyKeyword(firstKeyword, secondKeyword, pageable);
+    }
+
+    @Override
+    public BookPageResponse findBooksByKeywordExcluding(String firstKeyword, String secondKeyword, Pageable pageable) {
+        return bookQueryService.findBooksByKeywordExcluding(firstKeyword, secondKeyword, pageable);
+    }
 }

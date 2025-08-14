@@ -26,4 +26,16 @@ public class LoadBookAdapter implements LoadBookPort {
         return bookJpaRepository.findByKeyword(keyword, pageable)
                 .map(BookEntity::toDomain);
     }
+
+    @Override
+    public Page<Book> loadByAnyKeywords(String firstKeyword, String secondKeyword, Pageable pageable) {
+        return bookJpaRepository.findByAnyKeywords(firstKeyword, secondKeyword, pageable)
+                .map(BookEntity::toDomain);
+    }
+
+    @Override
+    public Page<Book> loadByKeywordExcluding(String firstKeyword, String secondKeyword, Pageable pageable) {
+        return bookJpaRepository.findByKeywordExcluding(firstKeyword, secondKeyword, pageable)
+                .map(BookEntity::toDomain);
+    }
 }
