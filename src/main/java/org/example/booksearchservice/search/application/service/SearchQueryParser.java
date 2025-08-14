@@ -8,8 +8,8 @@ import org.springframework.stereotype.Component;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.example.booksearchservice.common.exception.ErrorCode.*;
-import static org.example.booksearchservice.search.domain.SearchOperator.OR;
+import static org.example.booksearchservice.common.exception.ErrorCode.INVALID_KEYWORD_COUNT;
+import static org.example.booksearchservice.common.exception.ErrorCode.UNSUPPORTED_OPERATOR;
 
 @Component
 public class SearchQueryParser {
@@ -22,10 +22,8 @@ public class SearchQueryParser {
     }
 
     private SearchOperator extractOperator(String query) {
-        if (query.contains(OR.getQuerySymbol())) {
-            return OR;
-        }
-        throw new InvalidSearchQueryException(UNSUPPORTED_OPERATOR);
+        return SearchOperator.fromQuery(query)
+                .orElseThrow(() -> new InvalidSearchQueryException(UNSUPPORTED_OPERATOR));
     }
 
     private List<String> extractKeywords(String query, SearchOperator operator) {
