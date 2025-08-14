@@ -70,4 +70,26 @@ public class FakeLoadBookAdapter implements LoadBookPort {
 
         return new PageImpl<>(pagedBooks, pageable, filteredBooks.size());
     }
+
+    @Override
+    public Page<Book> loadByAnyKeywords(String firstKeyword, String secondKeyword, Pageable pageable) {
+        List<Book> filteredBooks = store.values().stream()
+                .filter(book -> {
+                    String title = book.getBasicInfo().getTitle().toLowerCase();
+                    String subtitle = book.getBasicInfo().getSubtitle().toLowerCase();
+                    return title.contains(firstKeyword.toLowerCase()) ||
+                            subtitle.contains(firstKeyword.toLowerCase()) ||
+                            title.contains(secondKeyword.toLowerCase()) ||
+                            subtitle.contains(secondKeyword.toLowerCase());
+                })
+                .toList();
+
+        int pageOffset = toIntExact(pageable.getOffset());
+        int pageLimit = min(pageOffset + pageable.getPageSize(), filteredBooks.size());
+        List<Book> pagedBooks = (pageOffset <= pageLimit)
+                ? filteredBooks.subList(pageOffset, pageLimit)
+                : List.of();
+
+        return new PageImpl<>(pagedBooks, pageable, filteredBooks.size());
+    }
 }
