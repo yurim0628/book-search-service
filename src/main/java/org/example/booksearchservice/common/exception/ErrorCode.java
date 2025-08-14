@@ -14,7 +14,11 @@ public enum ErrorCode {
     METHOD_ARGUMENT_NOT_VALID("유효하지 않은 요청 값입니다."),
 
     // Book
-    BOOK_NOT_FOUND("책을 찾을 수 없습니다.");
+    BOOK_NOT_FOUND("책을 찾을 수 없습니다."),
+
+    // Search
+    UNSUPPORTED_OPERATOR("지원하지 않는 검색 연산자입니다."),
+    INVALID_KEYWORD_COUNT("두 개의 키워드가 필요합니다.");
 
     private final String message;
 }
