@@ -4,11 +4,18 @@ import org.example.booksearchservice.book.application.port.LoadBookPort;
 import org.example.booksearchservice.book.domain.BasicInfo;
 import org.example.booksearchservice.book.domain.Book;
 import org.example.booksearchservice.book.domain.PublicationInfo;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
+import static java.lang.Math.min;
+import static java.lang.Math.toIntExact;
 
 public class FakeLoadBookAdapter implements LoadBookPort {
 
@@ -44,5 +51,45 @@ public class FakeLoadBookAdapter implements LoadBookPort {
     @Override
     public Optional<Book> loadById(Long id) {
         return Optional.ofNullable(store.get(id));
+    }
+
+    @Override
+    public Page<Book> loadByKeyword(String keyword, Pageable pageable) {
+        List<Book> filteredBooks = store.values().stream()
+                .filter(book -> book.getBasicInfo()
+                        .getTitle()
+                        .toLowerCase()
+                        .contains(keyword.toLowerCase()))
+                .toList();
+
+        int pageOffset = toIntExact(pageable.getOffset());
+        int pageLimit = min((pageOffset + pageable.getPageSize()), filteredBooks.size());
+        List<Book> pagedBooks = (pageOffset <= pageLimit)
+                ? filteredBooks.subList(pageOffset, pageLimit)
+                : List.of();
+
+        return new PageImpl<>(pagedBooks, pageable, filteredBooks.size());
+    }
+
+    @Override
+    public Page<Book> loadByAnyKeywords(String firstKeyword, String secondKeyword, Pageable pageable) {
+        List<Book> filteredBooks = store.values().stream()
+                .filter(book -> {
+                    String title = book.getBasicInfo().getTitle().toLowerCase();
+                    String subtitle = book.getBasicInfo().getSubtitle().toLowerCase();
+                    return title.contains(firstKeyword.toLowerCase()) ||
+                            subtitle.contains(firstKeyword.toLowerCase()) ||
+                            title.contains(secondKeyword.toLowerCase()) ||
+                            subtitle.contains(secondKeyword.toLowerCase());
+                })
+                .toList();
+
+        int pageOffset = toIntExact(pageable.getOffset());
+        int pageLimit = min(pageOffset + pageable.getPageSize(), filteredBooks.size());
+        List<Book> pagedBooks = (pageOffset <= pageLimit)
+                ? filteredBooks.subList(pageOffset, pageLimit)
+                : List.of();
+
+        return new PageImpl<>(pagedBooks, pageable, filteredBooks.size());
     }
 }
