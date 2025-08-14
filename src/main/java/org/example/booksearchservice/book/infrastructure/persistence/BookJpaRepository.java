@@ -8,10 +8,20 @@ import org.springframework.data.jpa.repository.Query;
 public interface BookJpaRepository extends JpaRepository<BookEntity, Long> {
 
     @Query("""
-        SELECT b
-        FROM BookEntity b
-        WHERE LOWER(b.title) LIKE LOWER(CONCAT('%', :keyword, '%'))
-           OR LOWER(b.subtitle) LIKE LOWER(CONCAT('%', :keyword, '%'))
-        """)
+            SELECT b
+            FROM BookEntity b
+            WHERE LOWER(b.title) LIKE LOWER(CONCAT('%', :keyword, '%'))
+               OR LOWER(b.subtitle) LIKE LOWER(CONCAT('%', :keyword, '%'))
+            """)
     Page<BookEntity> findByKeyword(String keyword, Pageable pageable);
+
+    @Query("""
+            SELECT b
+            FROM BookEntity b
+            WHERE (LOWER(b.title) LIKE LOWER(CONCAT('%', :firstKeyword, '%'))
+               OR LOWER(b.subtitle) LIKE LOWER(CONCAT('%', :firstKeyword, '%')))
+               OR (LOWER(b.title) LIKE LOWER(CONCAT('%', :secondKeyword, '%'))
+               OR LOWER(b.subtitle) LIKE LOWER(CONCAT('%', :secondKeyword, '%')))
+            """)
+    Page<BookEntity> findByAnyKeywords(String firstKeyword, String secondKeyword, Pageable pageable);
 }
