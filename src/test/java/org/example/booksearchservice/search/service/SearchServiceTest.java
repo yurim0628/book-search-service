@@ -8,6 +8,7 @@ import org.example.booksearchservice.search.application.service.SearchQueryParse
 import org.example.booksearchservice.search.application.service.SearchService;
 import org.example.booksearchservice.search.application.usecase.KeywordSearchUseCase;
 import org.example.booksearchservice.search.application.usecase.OperatorSearchUseCase;
+import org.example.booksearchservice.search.application.usecase.UpdatePopularKeywordUseCase;
 import org.example.booksearchservice.search.domain.SearchOperator;
 import org.example.booksearchservice.search.domain.SearchQuery;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,16 +33,27 @@ public class SearchServiceTest {
     private KeywordSearchUseCase keywordSearchUseCase;
     private Map<String, OperatorSearchUseCase> operatorSearchUseCaseMap;
     private SearchQueryParser searchQueryParser;
+    private UpdatePopularKeywordUseCase updatePopularKeywordUseCase;
+
     private SearchService searchService;
+
+    private OperatorSearchUseCase orOperatorSearchUseCase;
 
     @BeforeEach
     void setUp() {
         keywordSearchUseCase = mock(KeywordSearchUseCase.class);
+
+        orOperatorSearchUseCase = mock(OperatorSearchUseCase.class);
+
         operatorSearchUseCaseMap = Map.of(
-                NONE.name(), mock(OperatorSearchUseCase.class)
+                NONE.name(), mock(OperatorSearchUseCase.class),
+                SearchOperator.OR.name(), orOperatorSearchUseCase
         );
+
         searchQueryParser = mock(SearchQueryParser.class);
-        searchService = new SearchService(keywordSearchUseCase, operatorSearchUseCaseMap, searchQueryParser);
+        updatePopularKeywordUseCase = mock(UpdatePopularKeywordUseCase.class);
+
+        searchService = new SearchService(keywordSearchUseCase, operatorSearchUseCaseMap, searchQueryParser, updatePopularKeywordUseCase);
     }
 
     @Test
@@ -89,13 +101,9 @@ public class SearchServiceTest {
         Page<Book> bookPage = new PageImpl<>(books, pageable, books.size());
         BookPageResponse bookPageResponse = BookPageResponse.of(bookPage);
 
-        OperatorSearchUseCase operatorSearchUseCase = mock(OperatorSearchUseCase.class);
-        operatorSearchUseCaseMap = Map.of(operator.name(), operatorSearchUseCase);
-
-        searchService = new SearchService(keywordSearchUseCase, operatorSearchUseCaseMap, searchQueryParser);
-
         when(searchQueryParser.parse(query)).thenReturn(searchQuery);
-        when(operatorSearchUseCase.execute("java", "spring", pageable)).thenReturn(bookPageResponse);
+        when(orOperatorSearchUseCase.execute("java", "spring", pageable))
+                .thenReturn(bookPageResponse);
 
         // when
         SearchResponse response = searchService.searchBooksByComplexQuery(query, pageable);
