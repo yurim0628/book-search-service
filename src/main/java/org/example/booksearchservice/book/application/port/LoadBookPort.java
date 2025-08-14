@@ -9,4 +9,5 @@ import java.util.Optional;
 public interface LoadBookPort {
     Optional<Book> loadById(Long id);
     Page<Book> loadByKeyword(String keyword, Pageable pageable);
+    Page<Book> loadByAnyKeywords(String firstKeyword, String secondKeyword, Pageable pageable);
 }
