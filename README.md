@@ -67,7 +67,7 @@ API 명세서는 [여기](https://documenter.getpostman.com/view/30686816/2sB3BG
 - 포트-어댑터 패턴 (Port-Adapter Pattern)으로 의존성 역전 (Dependency Inversion Principle, DIP) 준수
 - 인터페이스 분리 원칙 (Interface Segregation Principle, ISP) 기반 역할별 인터페이스 분리
 
-자세한 내용과 적용 사례는 [설계 원칙 문서](docs/design-principles.md)에서 확인할 수 있습니다.
+자세한 내용과 적용 사례는 [설계 원칙 문서](https://github.com/yurim0628/book-search-service/wiki/SOLID-%EC%9B%90%EC%B9%99-%EA%B8%B0%EB%B0%98-%EA%B2%80%EC%83%89-%EC%84%9C%EB%B9%84%EC%8A%A4-%EC%84%A4%EA%B3%84-%EB%B0%8F-%EA%B5%AC%ED%98%84)에서 확인할 수 있습니다.
 
 ### 클래스 다이어그램 
 ![](https://github.com/user-attachments/assets/250243a5-c055-453a-ac34-a67ef0197014)
