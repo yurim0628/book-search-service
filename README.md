@@ -127,9 +127,7 @@ docker compose down
 * **역할별 인터페이스 분리로 인터페이스 분리 원칙 (Interface Segregation Principle, ISP) 준수**  
   데이터 접근 포트를 세부 인터페이스로 분리해, 서비스가 필요한 메서드만 의존하도록 설계했습니다. 이를 통해 불필요한 의존성을 줄이고 테스트 용이성을 높였습니다.
 
-자세한 내용과 적용 사례는 *
-*[SOLID 원칙 기반 도서 검색 서비스 설계 및 구현](https://github.com/yurim0628/book-search-service/wiki/SOLID-%EC%9B%90%EC%B9%99-%EA%B8%B0%EB%B0%98-%EA%B2%80%EC%83%89-%EC%84%9C%EB%B9%84%EC%8A%A4-%EC%84%A4%EA%B3%84-%EB%B0%8F-%EA%B5%AC%ED%98%84)
-** 문서에서 확인할 수 있습니다.
+자세한 내용과 적용 사례는 **[SOLID 원칙 기반 도서 검색 서비스 설계 및 구현](https://github.com/yurim0628/book-search-service/wiki/SOLID-%EC%9B%90%EC%B9%99-%EA%B8%B0%EB%B0%98-%EA%B2%80%EC%83%89-%EC%84%9C%EB%B9%84%EC%8A%A4-%EC%84%A4%EA%B3%84-%EB%B0%8F-%EA%B5%AC%ED%98%84)** 문서에서 확인할 수 있습니다.
 
 ### 클래스 다이어그램
 
