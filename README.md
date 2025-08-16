@@ -128,7 +128,7 @@ book
 #### 1. Docker 이미지 빌드
 
 ```bash
-docker build -t book-image -f ./Dockerfile .
+docker build -t book-search-image -f ./Dockerfile .
 ```
 
 #### 2. Docker Compose로 컨테이너 실행
