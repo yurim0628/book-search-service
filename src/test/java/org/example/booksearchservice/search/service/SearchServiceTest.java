@@ -92,8 +92,7 @@ public class SearchServiceTest {
 
         SearchOperator operator = SearchOperator.OR;
         SearchQuery searchQuery = SearchQuery.builder()
-                .firstKeyword("java")
-                .secondKeyword("spring")
+                .keywords(List.of("java", "spring"))
                 .operator(operator)
                 .build();
 
