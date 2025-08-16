@@ -29,7 +29,6 @@ public class BookEntity {
 
     private String title;
     private String subtitle;
-    private String image;
     private String author;
 
     private String publisher;
