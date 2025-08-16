@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.example.booksearchservice.common.exception.ErrorCode.*;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Slf4j
@@ -20,12 +21,21 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = NotFoundException.class)
-    public ResponseEntity<String> handleBookException(NotFoundException e) {
+    public ResponseEntity<String> handleNotFoundException(NotFoundException e) {
         ErrorCode errorCode = e.getErrorCode();
         String message = errorCode.getMessage();
         log.warn("[NotFoundException] Status: [{}], Message: [{}]", NOT_FOUND, message);
         return new ResponseEntity<>(message, NOT_FOUND);
     }
+
+    @ExceptionHandler(value = InvalidException.class)
+    public ResponseEntity<String> handleInvalidException(InvalidException e) {
+        ErrorCode errorCode = e.getErrorCode();
+        String message = errorCode.getMessage();
+        log.warn("[InvalidException] Status: [{}], Message: [{}]", BAD_REQUEST, message);
+        return new ResponseEntity<>(message, BAD_REQUEST);
+    }
+
 
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
     public ResponseEntity<String> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
