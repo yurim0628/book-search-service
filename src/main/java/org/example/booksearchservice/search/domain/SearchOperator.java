@@ -2,9 +2,11 @@ package org.example.booksearchservice.search.domain;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.example.booksearchservice.search.exception.InvalidSearchQueryException;
 
 import java.util.Arrays;
-import java.util.Optional;
+
+import static org.example.booksearchservice.common.exception.ErrorCode.UNSUPPORTED_OPERATOR;
 
 @Getter
 @RequiredArgsConstructor
@@ -16,10 +18,19 @@ public enum SearchOperator {
     private final String querySymbol;
     private final String splitRegex;
 
-    public static Optional<SearchOperator> fromQuery(String query) {
+    public static SearchOperator fromQuery(String query) {
         return Arrays.stream(values())
-                .filter(op -> !op.equals(NONE) && query.contains(op.querySymbol))
-                .findFirst();
+                .filter(SearchOperator::isNotNone)
+                .filter(operator -> operator.containsQuerySymbol(query))
+                .findAny()
+                .orElseThrow(() -> new InvalidSearchQueryException(UNSUPPORTED_OPERATOR));
+    }
+
+    private boolean isNotNone() {
+        return this != NONE;
+    }
+
+    private boolean containsQuerySymbol(String query) {
+        return query.contains(this.querySymbol);
     }
 }
-
