@@ -21,7 +21,7 @@
 * **복합 검색**: 두 개의 키워드와 논리 연산자(OR, NOT)를 조합해 도서를 검색합니다.
 * **인기 검색어 조회**: 가장 많이 검색된 키워드 상위 10개를 조회할 수 있습니다.
 
-[API 명세서](https://www.notion.so/API-12736e800eeb8091a684e1ccd78be70e)
+[API 명세서](https://documenter.getpostman.com/view/30686816/2sB3BGJVqC)
 
 ### 복합 검색 요청 흐름도
 
