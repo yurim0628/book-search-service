@@ -71,16 +71,17 @@
 
 ## 🐳 실행 방법
 
-#### 1. Docker 이미지 빌드
+#### 1. 레포지토리 클론
 
 ```bash
-docker build -t book-search-image -f ./Dockerfile .
+git clone https://github.com/yurim0628/book-search-service.git
+cd book-search-service
 ```
 
-#### 2. Docker Compose로 컨테이너 실행
+#### 2. Docker Compose로 컨테이너 빌드 및 실행
 
 ```bash
-docker compose up
+docker compose up -d --build
 ```
 
 #### 3. 애플리케이션 접속
