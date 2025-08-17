@@ -11,14 +11,23 @@ services:
       - "3306:3306"
     networks:
       - book-service-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot1234!!"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   book-search:
+    build:
+      context: .
+      dockerfile: Dockerfile
     image: book-search-image
     container_name: book-search-container
     ports:
       - "8080:8080"
     depends_on:
-        - mysql
+      mysql:
+        condition: service_healthy
     restart: always
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql-container:3306/book_db
