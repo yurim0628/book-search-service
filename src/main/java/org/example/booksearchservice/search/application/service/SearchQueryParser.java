@@ -14,10 +14,7 @@ public class SearchQueryParser {
         SearchOperator operator = SearchOperator.fromQuery(query);
         List<String> keywords = parseKeywords(query, operator);
 
-        return SearchQuery.builder()
-                .keywords(keywords)
-                .operator(operator)
-                .build();
+        return SearchQuery.of(keywords, operator);
     }
 
     private List<String> parseKeywords(String query, SearchOperator operator) {
