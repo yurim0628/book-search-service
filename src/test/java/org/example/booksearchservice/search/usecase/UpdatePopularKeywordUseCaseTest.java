@@ -1,6 +1,7 @@
 package org.example.booksearchservice.search.usecase;
 
 import org.example.booksearchservice.search.application.usecase.UpdatePopularKeywordUseCase;
+import org.example.booksearchservice.search.domain.SearchKeyword;
 import org.example.booksearchservice.search.infrastructure.cache.InMemoryPopularKeywordAdapter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -26,7 +27,7 @@ class UpdatePopularKeywordUseCaseTest {
     void execute_incrementsKeywordCount() {
         String keyword = "java";
 
-        useCase.execute(keyword);
+        useCase.execute(SearchKeyword.of(keyword));
 
         List<String> topKeywords = inMemoryAdapter.findTop10Keywords();
         assertThat(topKeywords.size()).isEqualTo(1);

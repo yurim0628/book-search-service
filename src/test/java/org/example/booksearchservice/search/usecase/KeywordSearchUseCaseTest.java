@@ -4,6 +4,7 @@ import org.example.booksearchservice.book.application.dto.BookPageResponse;
 import org.example.booksearchservice.mock.FakeBookInternalAdapter;
 import org.example.booksearchservice.search.application.port.BookInternalPort;
 import org.example.booksearchservice.search.application.usecase.KeywordSearchUseCase;
+import org.example.booksearchservice.search.domain.SearchKeyword;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,7 +31,7 @@ public class KeywordSearchUseCaseTest {
         Pageable pageable = PageRequest.of(0, 10);
 
         // when
-        BookPageResponse response = keywordSearchUseCase.execute(keyword, pageable);
+        BookPageResponse response = keywordSearchUseCase.execute(SearchKeyword.of(keyword), pageable);
 
         // then
         assertThat(

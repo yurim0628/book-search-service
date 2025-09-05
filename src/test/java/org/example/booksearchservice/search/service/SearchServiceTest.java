@@ -9,6 +9,7 @@ import org.example.booksearchservice.search.application.service.SearchService;
 import org.example.booksearchservice.search.application.usecase.KeywordSearchUseCase;
 import org.example.booksearchservice.search.application.usecase.OperatorSearchUseCase;
 import org.example.booksearchservice.search.application.usecase.UpdatePopularKeywordUseCase;
+import org.example.booksearchservice.search.domain.SearchKeyword;
 import org.example.booksearchservice.search.domain.SearchOperator;
 import org.example.booksearchservice.search.domain.SearchQuery;
 import org.junit.jupiter.api.BeforeEach;
@@ -67,7 +68,7 @@ public class SearchServiceTest {
         Page<Book> bookPage = new PageImpl<>(books, pageable, books.size());
         BookPageResponse bookPageResponse = BookPageResponse.of(bookPage);
 
-        when(keywordSearchUseCase.execute(keyword, pageable)).thenReturn(bookPageResponse);
+        when(keywordSearchUseCase.execute(SearchKeyword.of(keyword), pageable)).thenReturn(bookPageResponse);
 
         // when
         SearchResponse response = searchService.searchBooksByKeyword(keyword, pageable);
@@ -91,17 +92,14 @@ public class SearchServiceTest {
         Pageable pageable = PageRequest.of(0, 10);
 
         SearchOperator operator = SearchOperator.OR;
-        SearchQuery searchQuery = SearchQuery.builder()
-                .keywords(List.of("java", "spring"))
-                .operator(operator)
-                .build();
+        SearchQuery searchQuery = SearchQuery.of(List.of("java", "spring"), operator);
 
         List<Book> books = List.of(createBook());
         Page<Book> bookPage = new PageImpl<>(books, pageable, books.size());
         BookPageResponse bookPageResponse = BookPageResponse.of(bookPage);
 
         when(searchQueryParser.parse(query)).thenReturn(searchQuery);
-        when(orOperatorSearchUseCase.execute("java", "spring", pageable))
+        when(orOperatorSearchUseCase.execute(searchQuery.getFirstKeyword(), searchQuery.getSecondKeyword(), pageable))
                 .thenReturn(bookPageResponse);
 
         // when
