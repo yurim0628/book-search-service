@@ -1,5 +1,6 @@
 package org.example.booksearchservice.search.presentation;
 
+import org.example.booksearchservice.search.domain.SearchKeyword;
 import org.example.booksearchservice.search.infrastructure.cache.InMemoryPopularKeywordAdapter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -32,7 +33,7 @@ public class PopularKeywordControllerTest {
         for (int i = 1; i <= 15; i++) {
             String keyword = "keyword" + i;
             for (int j = 0; j < i; j++) {  // i만큼 count 증가
-                popularKeywordAdapter.incrementCount(keyword);
+                popularKeywordAdapter.incrementCount(SearchKeyword.of(keyword));
             }
         }
     }

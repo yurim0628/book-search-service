@@ -12,6 +12,8 @@ import org.example.booksearchservice.search.application.usecase.UpdatePopularKey
 import org.example.booksearchservice.search.domain.SearchKeyword;
 import org.example.booksearchservice.search.domain.SearchOperator;
 import org.example.booksearchservice.search.domain.SearchQuery;
+import org.example.booksearchservice.search.presentation.dto.ComplexSearchRequest;
+import org.example.booksearchservice.search.presentation.dto.SimpleSearchRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -71,7 +73,7 @@ public class SearchServiceTest {
         when(keywordSearchUseCase.execute(SearchKeyword.of(keyword), pageable)).thenReturn(bookPageResponse);
 
         // when
-        SearchResponse response = searchService.searchBooksByKeyword(keyword, pageable);
+        SearchResponse response = searchService.searchBooksByKeyword(new SimpleSearchRequest(keyword), pageable);
 
         // then
         AssertionsForClassTypes.assertThat(
@@ -92,7 +94,7 @@ public class SearchServiceTest {
         Pageable pageable = PageRequest.of(0, 10);
 
         SearchOperator operator = SearchOperator.OR;
-        SearchQuery searchQuery = SearchQuery.of(List.of("java", "spring"), operator);
+        SearchQuery searchQuery = SearchQuery.of(SearchKeyword.of("java"), SearchKeyword.of("spring"), operator);
 
         List<Book> books = List.of(createBook());
         Page<Book> bookPage = new PageImpl<>(books, pageable, books.size());
@@ -103,7 +105,7 @@ public class SearchServiceTest {
                 .thenReturn(bookPageResponse);
 
         // when
-        SearchResponse response = searchService.searchBooksByComplexQuery(query, pageable);
+        SearchResponse response = searchService.searchBooksByComplexQuery(new ComplexSearchRequest(query), pageable);
 
         // then
         assertThat(response.books()).hasSize(1);
