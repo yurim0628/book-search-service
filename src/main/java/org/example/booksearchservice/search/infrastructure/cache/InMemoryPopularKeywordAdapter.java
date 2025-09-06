@@ -2,6 +2,7 @@ package org.example.booksearchservice.search.infrastructure.cache;
 
 import org.example.booksearchservice.search.application.port.LoadPopularKeywordPort;
 import org.example.booksearchservice.search.application.port.UpdatePopularKeywordPort;
+import org.example.booksearchservice.search.domain.SearchKeyword;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -25,8 +26,8 @@ public class InMemoryPopularKeywordAdapter implements LoadPopularKeywordPort, Up
     }
 
     @Override
-    public void incrementCount(String keyword) {
-        keywordCountMap.merge(keyword, 1, Integer::sum);
+    public void incrementCount(SearchKeyword keyword) {
+        keywordCountMap.merge(keyword.getValue(), 1, Integer::sum);
     }
 }
 

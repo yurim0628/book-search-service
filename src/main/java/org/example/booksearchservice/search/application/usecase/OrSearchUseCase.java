@@ -20,7 +20,7 @@ public class OrSearchUseCase implements OperatorSearchUseCase {
     @Transactional(readOnly = true)
     public BookPageResponse execute(SearchKeyword firstKeyword, SearchKeyword secondKeyword, Pageable pageable) {
         log.info("Executing OR search with firstKeyword: [{}], secondKeyword: [{}]",
-                firstKeyword, secondKeyword);
-        return bookInternalPort.findBooksByAnyKeyword(firstKeyword.getValue(), secondKeyword.getValue(), pageable);
+                firstKeyword.getValue(), secondKeyword.getValue());
+        return bookInternalPort.findBooksByAnyKeyword(firstKeyword, secondKeyword, pageable);
     }
 }

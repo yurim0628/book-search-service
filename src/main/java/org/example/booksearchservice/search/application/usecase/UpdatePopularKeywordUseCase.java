@@ -16,7 +16,7 @@ public class UpdatePopularKeywordUseCase {
 
     @Async
     public void execute(SearchKeyword keyword) {
-        updatePopularKeywordPort.incrementCount(keyword.getValue());
-        log.info("Successfully incremented popular keyword: [{}]", keyword);
+        updatePopularKeywordPort.incrementCount(keyword);
+        log.info("Successfully incremented popular keyword: [{}]", keyword.getValue());
     }
 }
