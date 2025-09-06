@@ -7,6 +7,7 @@ import org.example.booksearchservice.search.application.dto.SearchResponse;
 import org.example.booksearchservice.search.application.usecase.OperatorSearchUseCase;
 import org.example.booksearchservice.search.application.usecase.KeywordSearchUseCase;
 import org.example.booksearchservice.search.application.usecase.UpdatePopularKeywordUseCase;
+import org.example.booksearchservice.search.domain.SearchKeyword;
 import org.example.booksearchservice.search.domain.SearchOperator;
 import org.example.booksearchservice.search.domain.SearchQuery;
 import org.springframework.data.domain.Pageable;
@@ -27,8 +28,9 @@ public class SearchService {
     private final UpdatePopularKeywordUseCase updatePopularKeywordUseCase;
 
     public SearchResponse searchBooksByKeyword(String keyword, Pageable pageable) {
-        BookPageResponse bookPageResponse = keywordSearchUseCase.execute(keyword, pageable);
-        updatePopularKeywordUseCase.execute(keyword);
+        SearchKeyword searchKeyword = SearchKeyword.of(keyword);
+        BookPageResponse bookPageResponse = keywordSearchUseCase.execute(searchKeyword, pageable);
+        updatePopularKeywordUseCase.execute(searchKeyword);
         return buildSearchResponse(keyword, bookPageResponse, NONE);
     }
 

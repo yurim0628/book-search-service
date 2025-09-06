@@ -4,6 +4,7 @@ import org.example.booksearchservice.book.application.dto.BookPageResponse;
 import org.example.booksearchservice.mock.FakeBookInternalAdapter;
 import org.example.booksearchservice.search.application.port.BookInternalPort;
 import org.example.booksearchservice.search.application.usecase.NotSearchUseCase;
+import org.example.booksearchservice.search.domain.SearchKeyword;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,7 +32,7 @@ class NotSearchUseCaseTest {
         Pageable pageable = PageRequest.of(0, 10);
 
         // when
-        BookPageResponse response = notSearchUseCase.execute(firstKeyword, secondKeyword, pageable);
+        BookPageResponse response = notSearchUseCase.execute(SearchKeyword.of(firstKeyword), SearchKeyword.of(secondKeyword), pageable);
 
         // then
         assertThat(response.pageInfo().totalElements()).isEqualTo(1);

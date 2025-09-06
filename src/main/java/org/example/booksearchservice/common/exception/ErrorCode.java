@@ -18,7 +18,10 @@ public enum ErrorCode {
 
     // Search
     UNSUPPORTED_OPERATOR("지원하지 않는 검색 연산자입니다."),
-    INVALID_KEYWORD_COUNT("두 개의 키워드가 필요합니다.");
+    INVALID_KEYWORD_COUNT("두 개의 키워드가 필요합니다."),
+    KEYWORD_REQUIRED("검색어는 반드시 입력해야합니다."),
+    INVALID_KEYWORD_LENGTH("검색 키워드는 2자 이상 50자 이하여야 합니다."),
+    INVALID_KEYWORD_PATTERN("허용되지 않은 문자가 포함되어 있습니다.");
 
     private final String message;
 }

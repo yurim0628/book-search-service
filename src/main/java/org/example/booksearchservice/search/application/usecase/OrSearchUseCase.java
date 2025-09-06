@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.booksearchservice.book.application.dto.BookPageResponse;
 import org.example.booksearchservice.search.application.port.BookInternalPort;
+import org.example.booksearchservice.search.domain.SearchKeyword;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,9 +18,9 @@ public class OrSearchUseCase implements OperatorSearchUseCase {
 
     @Override
     @Transactional(readOnly = true)
-    public BookPageResponse execute(String firstKeyword, String secondKeyword, Pageable pageable) {
+    public BookPageResponse execute(SearchKeyword firstKeyword, SearchKeyword secondKeyword, Pageable pageable) {
         log.info("Executing OR search with firstKeyword: [{}], secondKeyword: [{}]",
                 firstKeyword, secondKeyword);
-        return bookInternalPort.findBooksByAnyKeyword(firstKeyword, secondKeyword, pageable);
+        return bookInternalPort.findBooksByAnyKeyword(firstKeyword.getValue(), secondKeyword.getValue(), pageable);
     }
 }
