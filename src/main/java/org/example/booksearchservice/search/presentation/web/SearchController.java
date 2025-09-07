@@ -28,7 +28,7 @@ public class SearchController {
             @RequestParam(defaultValue = DEFAULT_SIZE) int size) {
 
         Pageable pageable = PageRequest.of(page, size);
-        SearchResponse response = searchService.searchBooksByKeyword(request.keyword(), pageable);
+        SearchResponse response = searchService.searchBooksByKeyword(request, pageable);
         return ResponseEntity.ok(response);
     }
 
@@ -39,7 +39,7 @@ public class SearchController {
             @RequestParam(defaultValue = DEFAULT_SIZE) int size) {
 
         Pageable pageable = PageRequest.of(page, size);
-        SearchResponse response = searchService.searchBooksByComplexQuery(request.query(), pageable);
+        SearchResponse response = searchService.searchBooksByComplexQuery(request, pageable);
         return ResponseEntity.ok(response);
     }
 }

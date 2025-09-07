@@ -21,6 +21,6 @@ public class NotSearchUseCase implements OperatorSearchUseCase {
     public BookPageResponse execute(SearchKeyword firstKeyword, SearchKeyword secondKeyword, Pageable pageable) {
         log.info("Executing NOT search with firstKeyword: [{}], excluding secondKeyword: [{}]",
                 firstKeyword.getValue(), secondKeyword.getValue());
-        return bookInternalPort.findBooksByKeywordExcluding(firstKeyword.getValue(), secondKeyword.getValue(), pageable);
+        return bookInternalPort.findBooksByKeywordExcluding(firstKeyword, secondKeyword, pageable);
     }
 }

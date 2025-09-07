@@ -1,5 +1,6 @@
 package org.example.booksearchservice.search.infrastructure;
 
+import org.example.booksearchservice.search.domain.SearchKeyword;
 import org.example.booksearchservice.search.infrastructure.cache.InMemoryPopularKeywordAdapter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -21,8 +22,8 @@ class InMemoryPopularKeywordAdapterTest {
     @Test
     @DisplayName("키워드 카운트가 정상적으로 증가하는지 테스트")
     void incrementCount_increasesCountCorrectly() {
-        inMemoryPopularKeywordAdapter.incrementCount("java");
-        inMemoryPopularKeywordAdapter.incrementCount("java");
+        inMemoryPopularKeywordAdapter.incrementCount(SearchKeyword.of("java"));
+        inMemoryPopularKeywordAdapter.incrementCount(SearchKeyword.of("java"));
 
         List<String> topKeywords = inMemoryPopularKeywordAdapter.findTop10Keywords();
 
@@ -36,7 +37,7 @@ class InMemoryPopularKeywordAdapterTest {
         for (int i = 0; i < 20; i++) {
             String keyword = "keyword" + i;
             for (int j = 0; j < i; j++) {
-                inMemoryPopularKeywordAdapter.incrementCount(keyword);
+                inMemoryPopularKeywordAdapter.incrementCount(SearchKeyword.of(keyword));
             }
         }
 

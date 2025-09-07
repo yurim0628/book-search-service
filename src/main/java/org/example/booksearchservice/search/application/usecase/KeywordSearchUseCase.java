@@ -18,7 +18,7 @@ public class KeywordSearchUseCase {
 
     @Transactional(readOnly = true)
     public BookPageResponse execute(SearchKeyword keyword, Pageable pageable) {
-        log.info("Executing keyword search for keyword: [{}]", keyword);
-        return bookInternalPort.findBooksByKeyword(keyword.getValue(), pageable);
+        log.info("Executing keyword search for keyword: [{}]", keyword.getValue());
+        return bookInternalPort.findBooksByKeyword(keyword, pageable);
     }
 }
